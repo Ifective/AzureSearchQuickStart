@@ -38,7 +38,7 @@ namespace AzureSearchDemo
         public void Initialize()
         {
             _scenarios = Assembly.GetAssembly(typeof(BaseSearchScenario)).GetTypes()
-                .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(BaseSearchScenario)))
+                .Where(myType => myType.IsClass && !myType.IsAbstract && (myType.IsSubclassOf(typeof(BaseSearchScenario)) || myType.IsSubclassOf(typeof(BaseSuggestScenario))))
                 .ToDictionary(t => t.Name);
         }
 
