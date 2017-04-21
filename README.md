@@ -1,7 +1,7 @@
-#Quickstart zoeken met Azure Search 
+# Quickstart zoeken met Azure Search 
 Microsoft Azure Search is een cloud oplossing die het mogelijk maakt om een geavanceerde zoekervaring te bieden binnen applicaties. In deze blog laten we zien hoe er snel gestart kan worden met Azure Search.
 
-##Kenmerken Azure Search
+## Kenmerken Azure Search
 Azure Search biedt verschillende voordelen:
 1.	Schaalbare oplossing
 2.	Indexing
@@ -9,10 +9,10 @@ Azure Search biedt verschillende voordelen:
 4.	Facetting
 5.  Etc.....
 
-##Opzet quickstart
+## Opzet quickstart
 In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). Hier wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt.
 
-##Opzetten van de index  
+## Opzetten van de index  
 Om gebruik te maken van Azure Search moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met Powershell, CLI of via de API's.  
 
 Hieronder wordt getoond hoe in het Azureportaal een nieuwe searchservice gemaakt kan worden. Voor dit voorbeeld volstaat de pricing tier Free. Voor productiedoeleinden moet uiteraard een betaalde pricing tier gekozen worden.
@@ -26,10 +26,5 @@ Zodra de searchservice aangemaakt is, kan er op het dashboard van de searchservi
 
 
 
-#Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+- a
+- b
