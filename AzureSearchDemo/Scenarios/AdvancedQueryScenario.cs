@@ -9,7 +9,7 @@ namespace AzureSearchDemo.Scenarios
     {
         protected override DocumentSearchResult<RealEstate> PerformSearch(ISearchIndexClient client)
         {
-            return client.Documents.Search<RealEstate>("(great views) | (beautiful home)", GetDefaultSearchParameters());
+            return client.Documents.Search<RealEstate>("(\"great views\") | (\"beautiful home\")", GetDefaultSearchParameters());
         }
     }
 }

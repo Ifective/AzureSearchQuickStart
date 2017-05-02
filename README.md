@@ -50,7 +50,7 @@ De searchservicenaam is de ingevoerde naam bij het maken van de search service. 
 
 De voorbeeldapplicatie is opgedeeld in verschillende scenarios die hieronder beschreven worden. Na het starten van de applicatie kan een scenario gekozen worden. In de console wordt dan meteen het resultaat getoond.
 
-## Aanspreken Search service
+## Aanspreken van de Search service
 Om in .NET gebruik te kunnen maken van de search service moet de SDK middels de Nuget-package "Microsoft.Azure.Search" geinstalleerd worden. Deze SDK is een wrapper om de REST API van Azure Search, zodat alle functionaliteiten ook op andere platformen uitgevoerd kunnen worden. Na het installatie van de Nuget-package moet eerst een seach service client gemaakt worden. Aan deze client worden de servicenaam en de key meegegeven. De search service client geeft toegang tot alle functionaliteiten van Azure Search, waaronder beheer van de service, het aanmaken van indexes en het uitvoeren zoekacties. Om het mogelijk te maken om te kunnen zoeken, halen we de indexclient voor de opgegeven indexnaam (realestate-us-sample) op.
 
 ```C#
@@ -68,7 +68,12 @@ var result = indexClient.Documents.Search<RealEstate>("Bellevue");
 Hiermee wordt er binnen alle kolommen die als doorzoekbaar zijn gemarkeerd gezocht op het het woord "Bellevue". Deze code levert onder water de volgende aanroep naar de API van de search service:
 `https://<searchservicenaam>.search.windows.net/indexes/realestate-us-sample/docs?api-version=2016-09-01&search=Bellevue`.
 
-Uiteraard kan de zoekactie veel complexer gemaakt worden. Dit kan gedaan worden door de zoektekst uit te breiden of door extra parameters mee te geven.
+Uiteraard kan de zoekactie veel uitgebreider gemaakt worden. Dit kan gedaan worden door de zoektekst uit te breiden of door extra parameters mee te geven.
+
+### Wildcards
+De zoektekst kan ook wildcards bevatten waarmee meer controle op de zoekresultaten uitgeoefend kan worden. Als er bijvoorbeeld specifiek gezocht moet worden op "great views" of "beautiful home" kan dit uitgevoerd worden door als zoektest het volgende mee te geven: `("great views") | ("beautiful home")`. Er wordt dan specifiek gezocht op de exacte fragmenten die tussen de haakjes staan. Verder is er een OF-operator toegevoegd, zodat er op meerdere fragmenten gezocht kan worden. Er zijn daarnaast nog veel meer operators zoals EN (+), NOT (-) en Suffix (*). De laatste operator maakt het mogelijk om te zoeken op tekst die begint met een bepaalde tekst, bijvoorbeeld: `belle*` (wat onder andere bellevue zal vinden).
+
+
 ## Filtering
 - a
 - b
