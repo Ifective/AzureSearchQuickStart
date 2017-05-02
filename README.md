@@ -72,7 +72,7 @@ Uiteraard kan de zoekactie veel uitgebreider gemaakt worden. Dit kan gedaan word
 
 ### Wildcards
 De zoektekst kan ook wildcards bevatten waarmee meer controle op de zoekresultaten uitgeoefend kan worden. Als er bijvoorbeeld specifiek gezocht moet worden op "great views" of "beautiful home" kan dit uitgevoerd worden door als zoektest het volgende mee te geven: `("great views") | ("beautiful home")`. Er wordt dan specifiek gezocht op de exacte fragmenten die tussen de haakjes staan. Verder is er een OF-operator toegevoegd, zodat er op meerdere fragmenten gezocht kan worden. Er zijn daarnaast nog veel meer operators zoals EN (+), NOT (-) en Suffix (*). De laatste operator maakt het mogelijk om te zoeken op tekst die begint met een bepaalde tekst, bijvoorbeeld: `belle*` (wat onder andere bellevue zal vinden).
-
+ 
 
 ## Filtering
 - a
