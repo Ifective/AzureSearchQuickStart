@@ -10,10 +10,10 @@ Azure Search biedt verschillende voordelen:
 5.  Fuzzy Search
 6.  Suggestions
 7.  Taal analyse
-5.  Etc.....
+8.  Geo Search
 
 ## Opzet quickstart
-In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). Hier wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt.
+In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). In deze quickstart wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
 
 ## Opzetten van de index  
 Om gebruik te maken van Azure Search moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met Powershell, CLI of via de API's.  
@@ -43,20 +43,32 @@ Vanuit het eigenschappenscherm van de index kan de search explorer gestart worde
 ![alt text](/Content/search_explorer.png "Search explorer")
 
 ## Gebruik van de voorbeeldcode
-Bij deze quickstart is voorbeeldcode te vinden waarmee een eigen search service aangesproken kan worden. Deze code kan gebruikt worden door onze github repository te clonen en en het project te openen met Visual Studio. In de projecteigenschappen (Debug>Application Arguments) kunnen de gegevens van search service opgegeven worden in het volgende formaat: 
-`-s <searchservicenaam> -k <admin key> -i realestate-us-sample`
+Bij deze quickstart is voorbeeldcode gemaakt waarmee een eigen search service aangesproken kan worden. Deze code kan gebruikt worden door onze github repository te clonen en en het project te openen met Visual Studio. In de projecteigenschappen (Debug > Application Arguments) kunnen de gegevens van search service opgegeven worden in het volgende formaat: 
+`-s <searchservicenaam> -k <adminkey> -i realestate-us-sample`
 
-De voorbeeldapplicatie is opgedeeld in verschillende scenarios die hier uitgewerkt worden. Na het starten van de applicatie kan een scenario gekozen worden. In de console wordt dan meteen de uitvoer getoond.
+De searchservicenaam is de ingevoerde naam bij het maken van de search service. De adminkey kan gevonden worden in het menu van het dasboard van de searchservice onder de sectie settings > keys.
+
+De voorbeeldapplicatie is opgedeeld in verschillende scenarios die hieronder beschreven worden. Na het starten van de applicatie kan een scenario gekozen worden. In de console wordt dan meteen het resultaat getoond.
 
 ## Aanspreken Search service
-Na het installeren van de nuget package.
+Om in .NET gebruik te kunnen maken van de search service moet de SDK middels de Nuget-package "Microsoft.Azure.Search" geinstalleerd worden. Deze SDK is een wrapper om de REST API van Azure Search, zodat alle functionaliteiten ook op andere platformen uitgevoerd kunnen worden. Na het installatie van de Nuget-package moet eerst een seach service client gemaakt worden. Aan deze client worden de servicenaam en de key meegegeven. De search service client geeft toegang tot alle functionaliteiten van Azure Search, waaronder beheer van de service, het aanmaken van indexes en het uitvoeren zoekacties. Om het mogelijk te maken om te kunnen zoeken, halen we de indexclient voor de opgegeven indexnaam (realestate-us-sample) op.
+
 ```C#
 var serviceClient = new SearchServiceClient(_searchServiceName, new SearchCredentials(_adminApiKey));
 var indexClient = serviceClient.Indexes.GetClient(_indexName);
-var result = client.Documents.Search<RealEstate>("Bellevue");
 ```
-## Basis queries
 
+## Zoekacties
+Met behulp van de indexClient kunen we zoekacties uitvoeren. Dit doen we op de volgende manier:
+
+```C#
+var result = indexClient.Documents.Search<RealEstate>("Bellevue");
+```
+
+Hiermee wordt er binnen alle kolommen die als doorzoekbaar zijn gemarkeerd gezocht op het het woord "Bellevue". Deze code levert onder water de volgende aanroep naar de API van de search service:
+`https://<searchservicenaam>.search.windows.net/indexes/realestate-us-sample/docs?api-version=2016-09-01&search=Bellevue`.
+
+Uiteraard kan de zoekactie veel complexer gemaakt worden. Dit kan gedaan worden door de zoektekst uit te breiden of door extra parameters mee te geven.
 ## Filtering
 - a
 - b
