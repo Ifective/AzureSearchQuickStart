@@ -71,10 +71,28 @@ Hiermee wordt er binnen alle kolommen die als doorzoekbaar zijn gemarkeerd gezoc
 Uiteraard kan de zoekactie veel uitgebreider gemaakt worden. Dit kan gedaan worden door de zoektekst uit te breiden of door extra parameters mee te geven.
 
 ### Wildcards
-De zoektekst kan ook wildcards bevatten waarmee meer controle op de zoekresultaten uitgeoefend kan worden. Als er bijvoorbeeld specifiek gezocht moet worden op "great views" of "beautiful home" kan dit uitgevoerd worden door als zoektest het volgende mee te geven: `("great views") | ("beautiful home")`. Er wordt dan specifiek gezocht op de exacte fragmenten die tussen de haakjes staan. Verder is er een OF-operator toegevoegd, zodat er op meerdere fragmenten gezocht kan worden. Er zijn daarnaast nog veel meer operators zoals EN (+), NOT (-) en Suffix (*). De laatste operator maakt het mogelijk om te zoeken op tekst die begint met een bepaalde tekst, bijvoorbeeld: `belle*` (wat onder andere bellevue zal vinden).
+De zoektekst kan wildcards bevatten waarmee meer controle op de zoekresultaten uitgeoefend kan worden. Als er bijvoorbeeld specifiek gezocht moet worden op "great views" of "beautiful home" kan dit uitgevoerd worden door als zoektest het volgende mee te geven: `("great views") | ("beautiful home")`. Er wordt dan specifiek gezocht op de exacte fragmenten die tussen de haakjes staan. Verder is er een OF-operator toegevoegd, zodat er op meerdere fragmenten gezocht kan worden. Er zijn daarnaast nog veel meer operators zoals EN (+), NOT (-) en Suffix (*). De laatste operator maakt het mogelijk om te zoeken op tekst die begint met een bepaalde tekst, bijvoorbeeld: `belle*` (wat onder andere bellevue zal vinden).
  
 ### Parameters
- 
+De werking van de zoekquery kan aangepast worden door zoekparameters mee te geven. In deze parameters kan onder andere het volgende gespecificeerd worden:
+- Sortering
+- Filtering
+- Welke velden teruggegeven worden
+- Filtering
+- Highlighting
+- Limitatie van het aantal resultaten
+
+De parameters kunnen op de onderstaande manier mee gegeven worden aan de zoekquery. In het onderstaande voorbeeld wordt de property IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze op te halen. Verder wordt in het onderstaande voorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt.
+```C#
+var parameters = new SearchParameters()
+{
+    IncludeTotalResultCount = true,
+    Select = new[] { "listingId", "description", "description_nl", "beds", "city", "sqft" }
+};
+var result = client.Documents.Search<RealEstate>("bellevue" , parameters);
+```
+
 ## Filtering
-- a
-- b
+De zoekresultaten kunnen gefilterd worden door de filter property in te stellen: `parameters.Filter = "beds ge 2 and sqft gt 16000";`. In dit geval worden de zoekresultaten gefilterd, zodat er alleen vastgoeditems getoond worden die twee of meer bedden hebben en waarvan de oppervlakte meer dan 16000 sq ft is. Voor filtering wordt de [OData Expression syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/odata-expression-syntax-for-azure-search) gebruikt, zodat operators zoals (eq, ne, gt, lt, ge, le) kunnen worden toegepast. 
+
+

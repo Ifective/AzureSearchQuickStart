@@ -57,7 +57,7 @@ namespace AzureSearchDemo.Scenarios
             {
                 IncludeTotalResultCount = true,
                 Select = new[] { "listingId", "description", "description_nl", "beds", "city", "sqft" }
-        };
+            };
         }
 
         protected virtual SearchServiceClient CreateSearchServiceClient()
