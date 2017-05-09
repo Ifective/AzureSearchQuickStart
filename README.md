@@ -13,7 +13,10 @@ Azure Search biedt verschillende voordelen:
 8.  Geo Search
 
 ## Opzet quickstart
-In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). In deze quickstart wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
+In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). 
+![alt text](/Content/searchsample.png "Search Demo")
+
+In deze quickstart wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
 
 ## Opzetten van de index  
 Om gebruik te maken van Azure Search moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met Powershell, CLI of via de API's.  
@@ -127,3 +130,10 @@ parameters.HighlightPreTag = "<HIGHLIGHT>";
 parameters.HighlightPostTag = "</HIGHLIGHT>";
 ```
 De tekst met highlights worden niet in de velden van het model aangepast, maar moet worden uitgelezen uit de Higlights property van de zoekresultaten. `result.Highlights.ForEach(h => Console.WriteLine($"-{string.Join("\r\n-", h.Value)}"));`
+
+
+### Faceted navigation
+Bij veel zoekmachines wordt er gebruik gemaakt facet functionaliteit. Deze functionaliteit maakt het mogelijk om de zoekresultaten te categoriseren. De categorisering vindt dan plaats op verschillende waardes in een indexveld of op het bereik van waardes. In het volgende voorbeeld staan de facetten van het vastgoedvoorbeeld.
+![alt text](/Content/searchsample_facet.png "Facetten")
+
+
