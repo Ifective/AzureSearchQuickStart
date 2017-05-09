@@ -1,22 +1,11 @@
 # Quickstart zoeken met Azure Search 
-Microsoft Azure Search is een cloud oplossing die het mogelijk maakt om een geavanceerde zoekervaring te bieden binnen applicaties. In deze quickstart laten we zien hoe er snel gestart kan worden met Azure Search.
-
-## Kenmerken Azure Search
-Azure Search biedt verschillende voordelen:
-1.	Schaalbare oplossing
-2.	Indexing
-3.	Search wildcards
-4.	Facetting
-5.  Fuzzy Search
-6.  Suggestions
-7.  Taal analyse
-8.  Geo Search
+Microsoft Azure Search is een cloud oplossing die het mogelijk maakt om een geavanceerde zoekervaring te bieden binnen applicaties. In deze quickstart laten we zien hoe er gestart kan worden met het gebruik van Azure Search.
 
 ## Opzet quickstart
 In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). 
 ![Search Demo](/Content/search_sample.png "Search Demo")
 
-In deze quickstart wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
+Er wordt hier een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
 
 ## Opzetten van de index  
 Om gebruik te maken van Azure Search moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met Powershell, CLI of via de API's.  
@@ -161,3 +150,22 @@ Het bovenstaande scoringprofile kan eenvoudig toegepast worden door de searchpar
 `parameters.ScoringProfile = "BoostCity";`.
 Op deze manier wordt er bij de zoekacties gebruik gemaakt van dit scoringprofile.
 
+### Geografische scoring
+Hierboven hebben we een scoring profile voor een veld gemaakt. Het is daarnaast ook mogelijk om een scoring functions te gebruiken. Een scoring function voert berekeningen uit op invoer. De invoer een scoring function is bijvoorbeeld de waarde van een (numeriek) veld, de recentheid van een item of een geografische afstand. In dit geval maken we een function die de zoekresultaten sorteert op de afstand tot de huidige locatie. Dit wordt als volgt ingesteld in het Azure portal (vanuit het dashboard van de searchservice):
+![Geo scoring profile](/Content/scoring_profile_location.png "Geo scoring profile")
+
+Er wordt hier een lineair algoritme gebruikt: elke stijging van de invoerwaarde resulteert in een evenredige stijging van het gewicht. Verder wordt hierbij aangegeven wat de maximale score is voor items die het meest in de buurt zijn (15) en wat de maximum afstand is waarop er nog extra gewicht wordt toegekend (50). Dit betekent dus dat een item dat op 0 km staat een gewicht van 15 krijgt, en een item op 51 km een gewicht van 1 krijgt. De locatie wordt vanuit de consumerende applicatie meegegeven door middel van een parameter met de naam currentLocation.
+
+Het scoringprofile kan als volgt aangesproken worden:
+```C#
+parameters.ScoringProfile = "BoostNearbyLocation";
+parameters.ScoringParameters = new List<ScoringParameter>()
+{
+    new ScoringParameter("currentLocation", GeographyPoint.Create(47.5679, -122.29))
+};
+``` 
+Hierbij worden dus de naam van het scoring profile en een scoring parameter meegegeven. De scoringparameter bevat de in het portal opgegeven naam en de huidige locatie. De huidige locatie staat hier vast, maar kan uiteraard uitgelezen worden uit de huidige locatie van de gebruiker.
+
+
+---
+*De bijbehorende code is te vinden op [GitHub](https://github.com/Ifective/AzureSearchQuickStart)*
