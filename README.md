@@ -70,6 +70,21 @@ Hiermee wordt er binnen alle kolommen die als doorzoekbaar zijn gemarkeerd gezoc
 
 Uiteraard kan de zoekactie veel uitgebreider gemaakt worden. Dit kan gedaan worden door de zoektekst uit te breiden of door extra parameters mee te geven.
 
+Bij de zoekactie wordt er gebruik gemaakt van een model waarin de resultaten worden gezet. Dit model is een POCO waarvan de properties overeenkomen met de veldnamen in de searchindex. De SDK zorgt ervoor dat de zoekresultaten automatisch gemapped worden naar een lijst van dit model. Voor dit voorbeeld is de onderstaande klasse gemaakt.
+
+```C#
+public class RealEstate
+{
+    public string ListingId { get; set; }
+    public int Beds { get; set; }
+    public int Bads { get; set; }
+    public string Description { get; set; }
+    public string Description_nl { get; set; }
+    public string City { get; set; }
+    public string Sqft { get; set; }
+}
+```
+
 ### Wildcards
 De zoektekst kan wildcards bevatten waarmee meer controle op de zoekresultaten uitgeoefend kan worden. Als er bijvoorbeeld specifiek gezocht moet worden op "great views" of "beautiful home" kan dit uitgevoerd worden door als zoektest het volgende mee te geven: `("great views") | ("beautiful home")`. Er wordt dan specifiek gezocht op de exacte fragmenten die tussen de haakjes staan. Verder is er een OF-operator toegevoegd, zodat er op meerdere fragmenten gezocht kan worden. Er zijn daarnaast nog veel meer operators zoals EN (+), NOT (-) en Suffix (*). De laatste operator maakt het mogelijk om te zoeken op tekst die begint met een bepaalde tekst, bijvoorbeeld: `belle*` (wat onder andere bellevue zal vinden).
  
@@ -82,7 +97,7 @@ De werking van de zoekquery kan aangepast worden door zoekparameters mee te geve
 - Highlighting
 - Limitatie van het aantal resultaten
 
-De parameters kunnen op de onderstaande manier mee gegeven worden aan de zoekquery. In het onderstaande voorbeeld wordt de eigenschap IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze op te halen. Verder wordt in het onderstaande voorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt. De velnamen die hier meegegeven worden, komen overeen met de veldnamen in de index.
+De parameters kunnen op de onderstaande manier mee gegeven worden aan de zoekquery. In het onderstaande voorbeeld wordt de property IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze op te halen. Verder wordt in het onderstaande voorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt. De velnamen die hier meegegeven worden, komen overeen met de veldnamen in de index.
 ```C#
 var parameters = new SearchParameters()
 {
@@ -92,14 +107,23 @@ var parameters = new SearchParameters()
 var result = client.Documents.Search<RealEstate>("bellevue" , parameters);
 ```
 
-De bovenstaande parameters kunnen uiteraard ook aan de REST API worden meegegeven. Voor elke searchparameter wordt er dan een querystringparameter meegegeven. De volgende querystring kan bijvoorbeeld in search explorer gebruikt worden om hetzelfde resultaat te krijgen als de bovenstaande .NET code:
+De bovenstaande parameters kunnen uiteraard ook aan de REST API worden meegegeven. Voor elke zoekparameter wordt er dan een querystringparameter meegegeven. De volgende querystring kan bijvoorbeeld in search explorer gebruikt worden om hetzelfde resultaat te krijgen als de bovenstaande .NET code:
 `&search=bellevue&$count=true&$select=listingId,description,description_nl,beds,city,sqft`.
 
-Door middel van de parameters kan verder worden bepaald in welke velden moet worden gezocht. Om er bijvoorbeeld voor te zorgen dat er alleen gezocht wordt in de Nederlandse beschrijving, wordt de volgende eigenschap ingesteld: `parameters.SearchFields = new List<string>() {"description_nl"};`. Vanaf dan worden de overige velden in de index buiten beschouwing gelaten bij de zoekactie.
+Door middel van de parameters kan verder worden bepaald in welke velden moet worden gezocht. Om er bijvoorbeeld voor te zorgen dat er alleen gezocht wordt in de Nederlandse beschrijving, wordt de volgende property ingesteld: `parameters.SearchFields = new List<string>() {"description_nl"};`. Vanaf dan worden de overige velden in de index buiten beschouwing gelaten bij de zoekactie.
 
-## Filtering
-De zoekresultaten kunnen gefilterd worden door de filter eigenschap in te stellen: `parameters.Filter = "beds ge 2 and sqft gt 16000";`. In dit geval worden de zoekresultaten gefilterd, zodat er alleen vastgoeditems getoond worden die twee of meer bedden hebben en waarvan de oppervlakte meer dan 16000 sq ft is. Voor filtering wordt de [OData Expression syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/odata-expression-syntax-for-azure-search) gebruikt, zodat operators zoals (eq, ne, gt, lt, ge, le, and, or en any) kunnen worden toegepast.
+### Filtering
+De zoekresultaten kunnen gefilterd worden door de filter property in te stellen: `parameters.Filter = "beds ge 2 and sqft gt 16000";`. In dit geval worden de zoekresultaten gefilterd, zodat er alleen vastgoeditems getoond worden die twee of meer bedden hebben en waarvan de oppervlakte meer dan 16000 sq ft is. Voor filtering wordt de [OData Expression syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/odata-expression-syntax-for-azure-search) gebruikt, zodat operators zoals (eq, ne, gt, lt, ge, le, and, or en any) kunnen worden toegepast.
 
 Ditzelfde kan in de search explorer bereikt worden door: `$filter=beds ge 2 and sqft gt 16000`
 
+### Highlighting
+Het is gebruikelijk dat in zoekresultaten gemarkeerd wordt waar de teksten staan die overeenkomen met de gezochte tekst. Hier kan de feature highlighting voor gebruikt worden. Higlighting zorgt ervoor dat de overeenkomstige tekst binnen een HTML-tag wordt geplaatst. In een webpagina kan er dan voor gezorgd worden dat deze tag anders wordt opgemaakt (bijvoorbeeld vet). 
 
+In het onderstaande voorbeeld wordt highlighting ingesteld op de zoekparameters. Als eerste moet er aangegeven worden op welke indexvelden er highlighting wordt uitgevoerd. Verder kunnen de begin- en eindtag ingesteld worden. Hier wordt er gebruik gemaakt van een customtag, maar uiteraard kan hier elke HTML-tag neergezet worden.
+```C#
+parameters.HighlightFields = new List<string>() { "description", "description_nl" };
+parameters.HighlightPreTag = "<HIGHLIGHT>";
+parameters.HighlightPostTag = "</HIGHLIGHT>";
+```
+De tekst met highlights worden niet in de velden van het model aangepast, maar moet worden uitgelezen uit de Higlights property van de zoekresultaten. `result.Highlights.ForEach(h => Console.WriteLine($"-{string.Join("\r\n-", h.Value)}"));`
