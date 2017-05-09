@@ -14,7 +14,7 @@ Azure Search biedt verschillende voordelen:
 
 ## Opzet quickstart
 In deze quickstart gaan we een voorbeelddataset met vastgoeditems doorzoeken. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). 
-![alt text](/Content/search_sample.png "Search Demo")
+![Search Demo](/Content/search_sample.png "Search Demo")
 
 In deze quickstart wordt een console applicatie in C# gemaakt waarin deze dataset aangeproken wordt. Om Azure Search aan te spreken wordt gebruik gemaakt van de .NET SDK. Op andere platformen kan er gebruik gemaakt worden van de REST API.
 
@@ -22,28 +22,28 @@ In deze quickstart wordt een console applicatie in C# gemaakt waarin deze datase
 Om gebruik te maken van Azure Search moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met Powershell, CLI of via de API's.  
 
 Hieronder wordt getoond hoe in het Azureportaal een nieuwe searchservice gemaakt kan worden. Voor dit voorbeeld volstaat de pricing tier Free. Voor productiedoeleinden moet uiteraard een betaalde pricing tier gekozen worden.
-![alt text](/Content/create_searchservice.png "Aanmaken Search Service")
+![Aanmaken Search Service](/Content/create_searchservice.png "Aanmaken Search Service")
 
 Er kan uiteraard alleen gezocht worden als er data in de search service aanwezig is. Hiervoor moet er een index gemaakt worden. Er kan een index gemaakt worden volgens een eigen definitie die door middel van code wordt gevuld. Een andere manier om een index te maken is door direct te koppelen aan een bestaande databron zoals een database. De index wordt dan zonder tussenkomst van custom code  gevuld. Op deze manier kan een bestaande database eenvoudig doorzoekbaar gemaakt worden. 
 
 Zodra de searchservice aangemaakt is, kan er op het dashboard van de searchservice op "Import data" geklikt worden. In dit scherm kiezen we er nu voor om gebruik te maken van voorbeelddata (Samples > realestate-us-sample) in plaats van een eigen database.
 
-![alt text](/Content/create_sample_index.png "Aanmaken index op basis van voorbeelddata")
+![Aanmaken index op basis van voorbeelddata](/Content/create_sample_index.png "Aanmaken index op basis van voorbeelddata")
 
 
 De index met voorbeelddata is nu aangemaakt. Het dashboard van de search service toont nu welke indexes aanwezig zijn en de hoeveelheid data in deze indexes.
 
-![alt text](/Content/search_dashboard.png "Search service dasboard")
+![Search service dasboard](/Content/search_dashboard.png "Search service dasboard")
 
 
 Vanuit dit dashboard kunnen de eigenschappen van de voorbeeldindex bekeken worden. In dit eigenschappenscherm zijn de velden van de index met het bijbehorende datatype in te zien. Verder wordt er per veld aangegeven of het veld doorzoekbaar, sorteerbaar of filterbaar is, of het veld uitgelezen kan worden door een client en of het veld als facet gebruikt gebruikt kan worden. Vanuit dit scherm kunnen velden bewerkt of toegevoegd worden. Verder kunnen hier scoring profiles worden toegevoegd. Deze principes worden verder op uitgelegd.
 
-![alt text](/Content/index_overview.png "Index eigenschappen")
+![Index eigenschappen](/Content/index_overview.png "Index eigenschappen")
 
 
 Vanuit het eigenschappenscherm van de index kan de search explorer gestart worden. Met deze search explorer kunnen zoekqueries eenvoudig getest worden. De resultaten zijn dan direct zichtbaar. De syntax die gebruikt kan worden staat op de volgende pagina: [Search Syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents). Queryvoorbeelden...
 
-![alt text](/Content/search_explorer.png "Search explorer")
+![Search explorer](/Content/search_explorer.png "Search explorer")
 
 ## Gebruik van de voorbeeldcode
 Bij deze quickstart is voorbeeldcode gemaakt waarmee een eigen search service aangesproken kan worden. Deze code kan gebruikt worden door onze github repository te clonen en en het project te openen met Visual Studio. In de projecteigenschappen (Debug > Application Arguments) kunnen de gegevens van search service opgegeven worden in het volgende formaat: 
@@ -133,7 +133,31 @@ De tekst met highlights worden niet in de velden van het model aangepast, maar m
 
 
 ### Faceted navigation
-Bij veel zoekmachines wordt er gebruik gemaakt facet functionaliteit. Deze functionaliteit maakt het mogelijk om de zoekresultaten te categoriseren. De categorisering vindt dan plaats op verschillende waardes in een indexveld of op het bereik van waardes. In het volgende voorbeeld staan de facetten van het vastgoedvoorbeeld.
-![alt text](/Content/search_sample_facet.png "Facetten")
+Bij veel zoekmachines wordt er gebruik gemaakt facet functionaliteit. Deze functionaliteit maakt het mogelijk om de zoekresultaten te categoriseren. De categorisering vindt dan plaats op verschillende waardes in een indexveld of op het bereik van waardes. In het onderstaande voorbeeld staan een aantal facetten van het vastgoedvoorbeeld. Hier wordt onder andere gegroepeerd op type huis en prijsbereik.
 
-Hier worden bijvoorbeeld waardes.
+![Facetten](/Content/search_sample_facet.png "Facetten")
+
+De facetten kunnen worden gebruikt om op te filteren (met de reeds beschreven filterfunctionaliteit). Als er dan op een een facet geklikt wordt, wordt er een nieuwe zoekquery uitgevoerd waarbij gefilterd wordt op een waarde van een facet.
+
+Om ervoor te zorgen dat de searchservice facetten aanlevert, moet de property Facets op de zoekparameters worden ingesteld. Deze property bevat een lijst van veldnamen. Bij een veldnaam kan eventueel aangegeven van welke type het facet is. In het onderstaande voorbeeld wordt er aangegeven dat het veld sqft gesegmenteerd moet worden in segmenten van 1000. Dit levert in de voorbeeldindex de segmenten 0, 1000, 2000, etc.
+`parameters.Facets = new List<string>() { "sqft,interval:1000"};`
+In de search explorer kan het volgende gebruikt worden: `facet=sqft,interval:1000`.
+
+De facetten kunnen vervolgens uit de Facets property van de zoekresultaten gelezen worden:
+
+`searchResults.Facets.ForEach(f => Console.WriteLine($"{f.Key}:\r\n{string.Join("\r\n",f.Value.Select(v => $"Value: {v.Value} Count: {v.Count}"))}"));`.
+Hierbij worden de facetnaam, de waarde en het aantal zoekresultaten onder een facetwaarde teruggegeven.
+
+### Scoring
+Azure Search bepaalt zelf in welke volgorde zoekresultaten teruggegeven worden. Hierbij zullen resultaten waarbij woorden beter overeenkomen of vaker voorkomen hoger in de lijst staan. 
+
+De standaardscoring kan aangepast worden door gebruik te maken van scoring profiles. Vanuit het dashboard van de searchservice in het Azure portal kan het scoringprofile gemaakt worden. In het profile kunnen gewichten aan velden gekoppeld worden. Dit betekent als er overeenkomsten in het opgegeven veld zijn voor een zoekresultaat, dat het zoekresultaat hoger op de lijst komt te staan dan een zoekresultaat wat geen overeenkomst in dit veld heeft (maar in een ander veld). Het standaardgewicht voor de velden is 1. In het volgende voorbeeld zetten we het gewicht van city op 10. Dit betekent dat overeenkomsten op city dus 10 keer zwaarder wegen dan overeenkomsten op andere velden.  
+
+![Scoring profile](/Content/scoring_profile_city.png "Scoring profile")
+
+Bovenstaande betekent echter niet dat een overeenkomst op city (altijd) tien keer hoger komt te staan in de lijst. De wegingsfactor voor velden is onderdeel van het totale scoringsalgoritme van Azure Search. 
+
+Het bovenstaande scoringprofile kan eenvoudig toegepast worden door de searchparameters in te stellen op de naam van het aangemaakte scoringprofile:
+`parameters.ScoringProfile = "BoostCity";`.
+Op deze manier wordt er bij de zoekacties gebruik gemaakt van dit scoringprofile.
+
