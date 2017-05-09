@@ -82,7 +82,7 @@ De werking van de zoekquery kan aangepast worden door zoekparameters mee te geve
 - Highlighting
 - Limitatie van het aantal resultaten
 
-De parameters kunnen op de onderstaande manier mee gegeven worden aan de zoekquery. In het onderstaande voorbeeld wordt de property IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze op te halen. Verder wordt in het onderstaande voorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt.
+De parameters kunnen op de onderstaande manier mee gegeven worden aan de zoekquery. In het onderstaande voorbeeld wordt de eigenschap IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze op te halen. Verder wordt in het onderstaande voorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt. De velnamen die hier meegegeven worden, komen overeen met de veldnamen in de index.
 ```C#
 var parameters = new SearchParameters()
 {
@@ -92,7 +92,14 @@ var parameters = new SearchParameters()
 var result = client.Documents.Search<RealEstate>("bellevue" , parameters);
 ```
 
+De bovenstaande parameters kunnen uiteraard ook aan de REST API worden meegegeven. Voor elke searchparameter wordt er dan een querystringparameter meegegeven. De volgende querystring kan bijvoorbeeld in search explorer gebruikt worden om hetzelfde resultaat te krijgen als de bovenstaande .NET code:
+`&search=bellevue&$count=true&$select=listingId,description,description_nl,beds,city,sqft`.
+
+Door middel van de parameters kan verder worden bepaald in welke velden moet worden gezocht. Om er bijvoorbeeld voor te zorgen dat er alleen gezocht wordt in de Nederlandse beschrijving, wordt de volgende eigenschap ingesteld: `parameters.SearchFields = new List<string>() {"description_nl"};`. Vanaf dan worden de overige velden in de index buiten beschouwing gelaten bij de zoekactie.
+
 ## Filtering
-De zoekresultaten kunnen gefilterd worden door de filter property in te stellen: `parameters.Filter = "beds ge 2 and sqft gt 16000";`. In dit geval worden de zoekresultaten gefilterd, zodat er alleen vastgoeditems getoond worden die twee of meer bedden hebben en waarvan de oppervlakte meer dan 16000 sq ft is. Voor filtering wordt de [OData Expression syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/odata-expression-syntax-for-azure-search) gebruikt, zodat operators zoals (eq, ne, gt, lt, ge, le) kunnen worden toegepast. 
+De zoekresultaten kunnen gefilterd worden door de filter eigenschap in te stellen: `parameters.Filter = "beds ge 2 and sqft gt 16000";`. In dit geval worden de zoekresultaten gefilterd, zodat er alleen vastgoeditems getoond worden die twee of meer bedden hebben en waarvan de oppervlakte meer dan 16000 sq ft is. Voor filtering wordt de [OData Expression syntax](https://docs.microsoft.com/en-us/rest/api/searchservice/odata-expression-syntax-for-azure-search) gebruikt, zodat operators zoals (eq, ne, gt, lt, ge, le, and, or en any) kunnen worden toegepast.
+
+Ditzelfde kan in de search explorer bereikt worden door: `$filter=beds ge 2 and sqft gt 16000`
 
 
