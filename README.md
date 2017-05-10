@@ -92,7 +92,7 @@ De werking van de zoekquery kan aangepast worden door zoekparameters mee te geve
 
 In het onderstaande codevoorbeeld wordt de property IncludeTotalResultCount ingesteld, zodat bij de zoekactie teruggegeven wordt hoeveel documenten in de index aan de zoekquery voldoen. Er worden standaard 50 items teruggegeven door de search service. Door middel van deze optie wordt het mogelijk om het totaal aantal resultaten uit te lezen zonder deze allemaal op te halen. 
 
-Verder wordt in het onderstaande codevoorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt. De velnamen die hier meegegeven worden, komen overeen met de veldnamen in de index.
+Verder wordt in het onderstaande codevoorbeeld bepaald welke velden uit de index terug worden gegeven in het resultaat. Zo kan ervoor gezorgd worden dat alleen de data die nodig is verstuurd wordt. De namen die hier meegegeven worden, komen overeen met de veldnamen in de index.
 
 ```cs
 var parameters = new SearchParameters()
