@@ -5,7 +5,7 @@
 Voor deze quickstart maken we gebruik van een voorbeelddataset met vastgoeditems. Per vastgoeditem zijn er eigenschappen vastgelegd zoals onder andere de omschrijving in verschillende talen, de locatie, de prijs en de oppervlakte. Microsoft heeft zelf een voorbeeldwebsite waarin deze dataset doorzoekbaar is gemaakt: [Voorbeeld webapplicatie](https://searchsamples.azurewebsites.net/#/homes). 
 ![Search Demo](/Content/search_sample.png "Search Demo")
 
-Hier wordt er door middel van een console applicatie in *C#* duidelijk gemaakt hoe deze dataset vanuit code kan worden aangeproken. Om Azure Search te gebruiken binnen een C# applicatie wordt er gebruik gemaakt van de *.NET SDK*. Op andere platformen kan er gebruik gemaakt worden van de *REST API*.
+Hier wordt er door middel van een console applicatie in *C#* duidelijk gemaakt hoe deze dataset vanuit code kan worden aangesproken. Om Azure Search te gebruiken binnen een C# applicatie wordt er gebruik gemaakt van de *.NET SDK*. Op andere platformen kan er gebruik gemaakt worden van de *REST API*.
 
 ## Opzetten van de index  
 Om gebruik te maken van *Azure Search* moet er een search service in Azure aangemaakt worden. Hier wordt getoond hoe dit uitgevoerd wordt vanuit het het Azureportaal. Uiteraard kan dit ook uitgevoerd worden met *Powershell*, *CLI* of via de *Azure API*.  
@@ -43,7 +43,7 @@ De searchservicenaam is de ingevoerde naam bij het maken van de search service. 
 De voorbeeldapplicatie is opgedeeld in verschillende scenarios die hieronder beschreven worden. Na het starten van de applicatie kan een scenario gekozen worden. In de console wordt dan meteen het resultaat getoond. De voorbeelden die hieronder beschreven staan, zijn aanwezig in de voorbeeldapplicatie.
 
 ## Aanspreken van de Search service
-Om in .NET gebruik te kunnen maken van de search service moet de SDK middels de Nuget-package *Microsoft.Azure.Search* geinstalleerd worden. Deze SDK is een wrapper om de REST API van Azure Search, zodat alle functionaliteiten ook op andere platformen uitgevoerd kunnen worden. Na het installatie van de Nuget-package moet eerst een search service client gemaakt worden. Aan deze client worden de servicenaam en de key meegegeven. De search service client geeft toegang tot alle functionaliteiten van Azure Search, waaronder beheer van de service, het aanmaken van indexes en het uitvoeren van zoekacties. Om het mogelijk te maken om te kunnen zoeken, instantiëren we de indexclient voor de opgegeven indexnaam (realestate-us-sample):
+Om in .NET gebruik te kunnen maken van de search service moet de SDK middels de Nuget-package *Microsoft.Azure.Search* geinstalleerd worden. Deze SDK is een wrapper om de REST API van Azure Search, zodat alle functionaliteiten ook op andere platformen uitgevoerd kunnen worden. Na de installatie van de Nuget-package moet eerst een search service client gemaakt worden. Aan deze client worden de servicenaam en de key meegegeven. De search service client geeft toegang tot alle functionaliteiten van Azure Search, waaronder beheer van de service, het aanmaken van indexes en het uitvoeren van zoekacties. Om het mogelijk te maken om te kunnen zoeken, instantiëren we de indexclient voor de opgegeven indexnaam (realestate-us-sample):
 
 ```cs
 var serviceClient = new SearchServiceClient(_searchServiceName, new SearchCredentials(_adminApiKey));
@@ -191,4 +191,5 @@ parameters.ScoringParameters = new List<ScoringParameter>()
 Hierbij worden dus de naam van het *scoring profile* en een *scoring parameter* meegegeven. De *scoring parameter* bevat de in het portal opgegeven naam en de huidige locatie. De huidige locatie is in dit geval als vaste waarde meegegeven, maar dit kan uiteraard gekoppeld worden aan de echte locatie van een gebruiker.
 
 ---
+*Heb je vragen of wil je meer weten? Neem dan contact op met Edwin Venema via 06-41483725 of via e.venema@ifective.nl*
 *De bijbehorende code is te vinden op [GitHub](https://github.com/Ifective/AzureSearchQuickStart)*
