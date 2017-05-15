@@ -191,5 +191,4 @@ parameters.ScoringParameters = new List<ScoringParameter>()
 Hierbij worden dus de naam van het *scoring profile* en een *scoring parameter* meegegeven. De *scoring parameter* bevat de in het portal opgegeven naam en de huidige locatie. De huidige locatie is in dit geval als vaste waarde meegegeven, maar dit kan uiteraard gekoppeld worden aan de echte locatie van een gebruiker.
 
 ---
-*Heb je vragen of wil je meer weten? Neem dan contact op met Edwin Venema via 06-41483725 of via e.venema@ifective.nl*
-*De bijbehorende code is te vinden op [GitHub](https://github.com/Ifective/AzureSearchQuickStart)*
+*Heb je vragen of wil je meer weten? Neem dan contact op met Edwin Venema via 06-41483725 of via [e.venema@ifective.nl](mailto:e.venema@ifective.nl).*
